@@ -1,267 +1,282 @@
 <!doctype html>
-
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
-
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <meta name="description" content="Лабараторная работа 2 по вебчику" />
-
-        <meta name="author" content="z4y4ts" />
-
-        <title>Anti-Slop Masterpiece</title>
-
+        <meta name="description" content="Лабораторная работа №2 по веб-программированию" />
+        <meta name="author" content="Зайцев Никита" />
+        <title>Лабораторная работа №2</title>
         <link rel="stylesheet" href="style.css" />
     </head>
-
     <body>
         <header class="page-header">
             <div class="page-header_inner">
-                <div class="page-header_title">
-                    <h1>Лабораторная работа №2</h1>
-
-                    <p>Зайцев Никита · ИТМО</p>
-                </div>
-
+                <a class="brand" href="#" aria-label="На начало страницы">
+                    <span class="brand-mark">W</span>
+                    <span class="page-header_title">
+                        <strong>Web Lab №2</strong>
+                        <small>Зайцев Никита · ИТМО</small>
+                    </span>
+                </a>
                 <nav class="page-nav" aria-label="Навигация по странице">
-                    <a href="#checker">Проверка точки</a>
-                    <a href="#results">Результаты</a>
+                    <a href="#checker">Проверка</a>
+                    <a href="#results">История</a>
                 </nav>
             </div>
         </header>
 
         <main class="page">
-            <article class="card task-description">
-                <h2 class="section-title">О лабораторной</h2>
-                <p>
-                    Приложение определяет попадание точки
-                    <strong>(X, Y)</strong>
-                    в заданную область с параметром
-                    <strong>R</strong>. Данные передаются серверу методом <code>GET</code>.
-                </p>
-                <details>
-                    <summary>Условия варианта</summary>
-
-                    <ul class="task-list">
-                        <li>X выбирается из значений −5, −4, −3, −2, −1, 0, 1, 2, 3.</li>
-
-                        <li>Y вводится вручную и должен находиться в диапазоне от −3 до 3.</li>
-
-                        <li>R вводится вручную и должен находиться в диапазоне от 1 до 4.</li>
-
-                        <li>
-                            Результат проверки отображается в таблице без перезагрузки страницы.
-                        </li>
-                    </ul>
-
-                    <dl class="parameter-list">
-                        <dt>X</dt>
-                        <dd>Radio: −5 ... 3</dd>
-
-                        <dt>Y</dt>
-                        <dd>Text: −3 ... 3</dd>
-
-                        <dt>R</dt>
-                        <dd>Text: 1 ... 4</dd>
-                    </dl>
-                </details>
-            </article>
+            <section class="hero" aria-labelledby="hero-title">
+                <div>
+                    <span class="eyebrow">Quarkus · Apache · AJAX</span>
+                    <h1 id="hero-title">Проверка попадания точки в область</h1>
+                    <p>
+                        Выберите координаты и параметр R. Проверка выполняется на Java-сервере, а
+                        результат появляется без перезагрузки страницы.
+                    </p>
+                </div>
+                <div class="hero-meta" aria-label="Параметры варианта">
+                    <span>X: −5…3</span>
+                    <span>Y: −3…3</span>
+                    <span>R: 1…4</span>
+                    <span>GET</span>
+                </div>
+            </section>
 
             <section id="checker" class="checker-section" aria-labelledby="checker-title">
-                <h2 id="checker-title" class="section-title">Проверка точки</h2>
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">Интерактивная проверка</span>
+                        <h2 id="checker-title">Координатная область</h2>
+                    </div>
+                    <p id="request-status" class="request-status" aria-live="polite">
+                        Готов к проверке
+                    </p>
+                </div>
 
                 <div class="checker-grid">
                     <figure class="card graph-card">
-                        <svg
-                            class="area-graph"
-                            viewBox="0 0 420 420"
-                            role="img"
-                            aria-labelledby="graph-title graph-description"
-                        >
-                            <title id="graph-title">Область попадания точки</title>
+                        <div class="graph-card_header">
+                            <div>
+                                <h3>График области</h3>
+                                <p>Точки из истории отображаются поверх области</p>
+                            </div>
+                            <span id="point-count" class="point-count">0 точек</span>
+                        </div>
 
-                            <desc id="graph-description">
-                                Область состоит из треугольника, прямоугольника и четверти круга.
-                            </desc>
+                        <div class="graph-stage">
+                            <svg
+                                class="area-graph"
+                                viewBox="0 0 420 420"
+                                role="img"
+                                aria-labelledby="graph-title graph-description"
+                            >
+                                <title id="graph-title">Область попадания точки</title>
+                                <desc id="graph-description">
+                                    Треугольник во второй четверти, прямоугольник в первой четверти
+                                    и четверть круга в третьей четверти.
+                                </desc>
 
-                            <polygon class="hit-area" points="90,210 210,90 210,210" />
+                                <defs>
+                                    <linearGradient id="area-gradient" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#6366f1" />
+                                        <stop offset="100%" stop-color="#2563eb" />
+                                    </linearGradient>
+                                    <filter
+                                        id="point-shadow"
+                                        x="-60%"
+                                        y="-60%"
+                                        width="220%"
+                                        height="220%"
+                                    >
+                                        <feDropShadow
+                                            dx="0"
+                                            dy="2"
+                                            stdDeviation="2.5"
+                                            flood-opacity="0.28"
+                                        />
+                                    </filter>
+                                </defs>
 
-                            <rect class="hit-area" x="210" y="90" width="60" height="120" />
+                                <g class="graph-grid" aria-hidden="true">
+                                    <line x1="90" y1="50" x2="90" y2="370" />
+                                    <line x1="150" y1="50" x2="150" y2="370" />
+                                    <line x1="270" y1="50" x2="270" y2="370" />
+                                    <line x1="330" y1="50" x2="330" y2="370" />
+                                    <line x1="50" y1="90" x2="370" y2="90" />
+                                    <line x1="50" y1="150" x2="370" y2="150" />
+                                    <line x1="50" y1="270" x2="370" y2="270" />
+                                    <line x1="50" y1="330" x2="370" y2="330" />
+                                </g>
 
-                            <path
-                                class="hit-area"
-                                d="
-                                    M 150 210
-                                    A 60 60 0 0 0 210 270
-                                    L 210 210
-                                    Z
-                                "
-                            />
+                                <polygon class="hit-area" points="90,210 210,90 210,210" />
+                                <rect class="hit-area" x="210" y="90" width="60" height="120" />
+                                <path
+                                    class="hit-area"
+                                    d="M 150 210 A 60 60 0 0 0 210 270 L 210 210 Z"
+                                />
 
-                            <line class="axis" x1="40" y1="210" x2="380" y2="210" />
+                                <line class="axis" x1="40" y1="210" x2="380" y2="210" />
+                                <line class="axis" x1="210" y1="380" x2="210" y2="40" />
+                                <polyline class="axis" points="370,202 380,210 370,218" />
+                                <polyline class="axis" points="202,50 210,40 218,50" />
 
-                            <line class="axis" x1="210" y1="380" x2="210" y2="40" />
+                                <line class="tick" x1="90" y1="204" x2="90" y2="216" />
+                                <line class="tick" x1="150" y1="204" x2="150" y2="216" />
+                                <line class="tick" x1="270" y1="204" x2="270" y2="216" />
+                                <line class="tick" x1="330" y1="204" x2="330" y2="216" />
+                                <line class="tick" x1="204" y1="90" x2="216" y2="90" />
+                                <line class="tick" x1="204" y1="150" x2="216" y2="150" />
+                                <line class="tick" x1="204" y1="270" x2="216" y2="270" />
+                                <line class="tick" x1="204" y1="330" x2="216" y2="330" />
 
-                            <polyline class="axis" points="370,202 380,210 370,218" />
+                                <g class="axis-labels">
+                                    <text x="378" y="196">x</text>
+                                    <text x="220" y="46">y</text>
+                                    <text x="76" y="198">−R</text>
+                                    <text x="130" y="198">−R/2</text>
+                                    <text x="258" y="198">R/2</text>
+                                    <text x="325" y="198">R</text>
+                                    <text x="220" y="96">R</text>
+                                    <text x="220" y="156">R/2</text>
+                                    <text x="220" y="276">−R/2</text>
+                                    <text x="220" y="336">−R</text>
+                                </g>
 
-                            <polyline class="axis" points="202,50 210,40 218,50" />
+                                <g id="points-layer" class="points-layer"></g>
+                            </svg>
+                        </div>
 
-                            <line class="tick" x1="90" y1="204" x2="90" y2="216" />
-
-                            <line class="tick" x1="150" y1="204" x2="150" y2="216" />
-
-                            <line class="tick" x1="270" y1="204" x2="270" y2="216" />
-
-                            <line class="tick" x1="330" y1="204" x2="330" y2="216" />
-
-                            <line class="tick" x1="204" y1="90" x2="216" y2="90" />
-
-                            <line class="tick" x1="204" y1="150" x2="216" y2="150" />
-
-                            <line class="tick" x1="204" y1="270" x2="216" y2="270" />
-
-                            <line class="tick" x1="204" y1="330" x2="216" y2="330" />
-
-                            <g class="axis-labels">
-                                <text x="378" y="196">x</text>
-                                <text x="220" y="46">y</text>
-
-                                <text x="76" y="198">−R</text>
-                                <text x="130" y="198">−R/2</text>
-                                <text x="258" y="198">R/2</text>
-                                <text x="325" y="198">R</text>
-
-                                <text x="220" y="96">R</text>
-                                <text x="220" y="156">R/2</text>
-                                <text x="220" y="276">−R/2</text>
-                                <text x="220" y="336">−R</text>
-                            </g>
-                        </svg>
-
-                        <figcaption>Область попадания точки</figcaption>
+                        <div class="graph-footer">
+                            <div class="graph-legend">
+                                <span><i class="legend-dot legend-hit"></i>Попадание</span>
+                                <span><i class="legend-dot legend-miss"></i>Промах</span>
+                            </div>
+                            <p>Последняя точка выделяется крупнее</p>
+                        </div>
                     </figure>
 
                     <section class="card form-card">
-                        <h3>Параметры точки</h3>
+                        <div class="form-card_header">
+                            <span class="eyebrow">Параметры</span>
+                            <h3>Введите координаты</h3>
+                            <p>Клиент проверяет ввод, сервер повторно валидирует данные.</p>
+                        </div>
 
                         <form id="point-form" method="get" action="/api/check" autocomplete="off">
                             <fieldset class="form-group">
                                 <legend>Координата X</legend>
-
                                 <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="-5" required />
-
-                                        <span>−5</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="-4" />
-
-                                        <span>−4</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="-3" />
-
-                                        <span>−3</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="-2" />
-
-                                        <span>−2</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="-1" />
-
-                                        <span>−1</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="0" />
-
-                                        <span>0</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="1" />
-
-                                        <span>1</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="2" />
-
-                                        <span>2</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="x" value="3" />
-
-                                        <span>3</span>
-                                    </label>
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="-5" required /><span
+                                            >−5</span
+                                        ></label
+                                    >
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="-4" /><span
+                                            >−4</span
+                                        ></label
+                                    >
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="-3" /><span
+                                            >−3</span
+                                        ></label
+                                    >
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="-2" /><span
+                                            >−2</span
+                                        ></label
+                                    >
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="-1" /><span
+                                            >−1</span
+                                        ></label
+                                    >
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="0" /><span
+                                            >0</span
+                                        ></label
+                                    >
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="1" /><span
+                                            >1</span
+                                        ></label
+                                    >
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="2" /><span
+                                            >2</span
+                                        ></label
+                                    >
+                                    <label class="radio-option"
+                                        ><input type="radio" name="x" value="3" /><span
+                                            >3</span
+                                        ></label
+                                    >
                                 </div>
                             </fieldset>
 
-                            <div class="form-field">
-                                <label for="y"> Координата Y </label>
+                            <div class="field-grid">
+                                <div class="form-field">
+                                    <label for="y">Координата Y</label>
+                                    <div class="input-shell">
+                                        <span>Y</span>
+                                        <input
+                                            id="y"
+                                            name="y"
+                                            type="text"
+                                            inputmode="decimal"
+                                            placeholder="−3 … 3"
+                                            required
+                                            aria-describedby="y-hint"
+                                        />
+                                    </div>
+                                    <small id="y-hint">−3 ≤ Y ≤ 3</small>
+                                </div>
 
-                                <input
-                                    id="y"
-                                    name="y"
-                                    type="text"
-                                    inputmode="decimal"
-                                    placeholder="от −3 до 3"
-                                    required
-                                    aria-describedby="y-hint"
-                                />
-
-                                <small id="y-hint"> Допустимый диапазон: −3 ≤ Y ≤ 3 </small>
-                            </div>
-
-                            <div class="form-field">
-                                <label for="r"> Параметр R </label>
-
-                                <input
-                                    id="r"
-                                    name="r"
-                                    type="text"
-                                    inputmode="decimal"
-                                    placeholder="от 1 до 4"
-                                    required
-                                    aria-describedby="r-hint"
-                                />
-
-                                <small id="r-hint"> Допустимый диапазон: 1 ≤ R ≤ 4 </small>
+                                <div class="form-field">
+                                    <label for="r">Параметр R</label>
+                                    <div class="input-shell">
+                                        <span>R</span>
+                                        <input
+                                            id="r"
+                                            name="r"
+                                            type="text"
+                                            inputmode="decimal"
+                                            placeholder="1 … 4"
+                                            required
+                                            aria-describedby="r-hint"
+                                        />
+                                    </div>
+                                    <small id="r-hint">1 ≤ R ≤ 4</small>
+                                </div>
                             </div>
 
                             <div class="form-actions">
-                                <button type="submit">Проверить</button>
-
+                                <button id="submit-button" type="submit">
+                                    <span>Проверить точку</span>
+                                    <span aria-hidden="true">→</span>
+                                </button>
                                 <button type="reset" class="button-secondary">Сбросить</button>
                             </div>
                         </form>
-
-                        <aside class="form-note">
-                            Клиентская проверка предназначена для удобства пользователя. Сервер
-                            повторно проверяет все значения.
-                        </aside>
                     </section>
                 </div>
             </section>
 
             <section id="results" class="card results-section" aria-labelledby="results-title">
-                <h2 id="results-title" class="section-title">Результаты</h2>
+                <div class="results-header">
+                    <div>
+                        <span class="eyebrow">История запросов</span>
+                        <h2 id="results-title">Результаты</h2>
+                    </div>
+                    <p>Новые проверки появляются сверху</p>
+                </div>
 
                 <div class="table-wrapper">
                     <table class="results-table">
-                        <caption>
+                        <caption class="visually-hidden">
                             История проверенных точек
                         </caption>
-
                         <thead>
                             <tr>
                                 <th scope="col">X</th>
@@ -272,7 +287,6 @@
                                 <th scope="col">Время работы</th>
                             </tr>
                         </thead>
-
                         <tbody id="results-body">
                             <tr class="empty-row">
                                 <td colspan="6">Пока нет результатов</td>
@@ -284,7 +298,8 @@
         </main>
 
         <footer class="page-footer">
-            <address>Зайцев Никита - ИТМО</address>
+            <span>Зайцев Никита</span>
+            <span>ИТМО · Веб-программирование</span>
         </footer>
 
         <script type="module" src="script.js"></script>
