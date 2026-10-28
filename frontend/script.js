@@ -244,7 +244,7 @@ function addResultToTable(result, addToTop) {
 
     const executionCell = document.createElement("td");
 
-    executionCell.textContent = `${(result.executionTimeNs / 1000).toFixed(2)} µs`;
+    executionCell.textContent = `${(result.executionTimeNs / 1000).toFixed(2)} мс`;
 
     row.append(executionCell);
 
